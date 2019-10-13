@@ -4,7 +4,11 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+import com.example.attendance.ui.AttendanceDao;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -30,9 +34,17 @@ public class MainActivity extends AppCompatActivity {
 		
 		// So that bottom of parent-fragment can end at the top of bottom-tab-navigation-bar.
 		DisplayMetrics navMetrics = navView.getResources().getDisplayMetrics();
+		
 		View parentFragment = findViewById(R.id.nav_host_fragment);
 		DisplayMetrics fragmentMetrics = parentFragment.getResources().getDisplayMetrics();
 		parentFragment.getLayoutParams().width = fragmentMetrics.widthPixels - navMetrics.widthPixels;
 		parentFragment.getLayoutParams().height = fragmentMetrics.heightPixels - navMetrics.heightPixels;
+		
+		
+//		AttendanceDao asdf = AttendanceDao();
+//		asdf.getAll();
 	}
+	
+	private List<> mAttendanceList;
+	private List
 }
