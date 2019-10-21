@@ -4,11 +4,9 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
-import com.example.attendance.ui.AttendanceDao;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.text.DateFormat;
-import java.util.Date;
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -17,6 +15,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
+	
+	private List<Attendance> mAttendanceList;
+	private AttendanceViewModel attendanceViewModel;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,19 +33,23 @@ public class MainActivity extends AppCompatActivity {
 		NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 		NavigationUI.setupWithNavController(navView, navController);
 		
-		// So that bottom of parent-fragment can end at the top of bottom-tab-navigation-bar.
-		DisplayMetrics navMetrics = navView.getResources().getDisplayMetrics();
-		
-		View parentFragment = findViewById(R.id.nav_host_fragment);
-		DisplayMetrics fragmentMetrics = parentFragment.getResources().getDisplayMetrics();
-		parentFragment.getLayoutParams().width = fragmentMetrics.widthPixels - navMetrics.widthPixels;
-		parentFragment.getLayoutParams().height = fragmentMetrics.heightPixels - navMetrics.heightPixels;
-		
-		
+		setSizeOfNavigationHost(navView);
 //		AttendanceDao asdf = AttendanceDao();
 //		asdf.getAll();
 	}
 	
-	private List<> mAttendanceList;
-	private List
+	
+	/*
+	 So that bottom of parent-fragment can end at the top of bottom-tab-navigation-bar.
+	*/
+	private void setSizeOfNavigationHost(BottomNavigationView bottomNavigationView) {
+		DisplayMetrics navMetrics = bottomNavigationView.getResources().getDisplayMetrics();
+		
+		View parentFragment = findViewById(R.id.nav_host_fragment);
+		DisplayMetrics fragmentMetrics = parentFragment.getResources().getDisplayMetrics();
+		
+		parentFragment.getLayoutParams().width = fragmentMetrics.widthPixels - navMetrics.widthPixels;
+		parentFragment.getLayoutParams().height = fragmentMetrics.heightPixels - navMetrics.heightPixels;
+	}
+	
 }

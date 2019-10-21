@@ -1,6 +1,4 @@
-package com.example.attendance.ui;
-
-import com.example.attendance.Attendance;
+package com.example.attendance;
 
 import java.util.List;
 

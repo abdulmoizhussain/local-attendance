@@ -2,33 +2,31 @@ package com.example.attendance;
 
 import android.content.Context;
 
-import com.example.attendance.ui.AttendanceDao;
-
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 @Database(entities = {Attendance.class}, version = 1, exportSchema = false)
-@TypeConverters(DateConverter.class)
-public abstract class AppDatabase extends RoomDatabase {
+@TypeConverters({DateConverter.class, AttendanceTypeConverter.class})
+public abstract class AttendanceDatabase extends RoomDatabase {
 	public static final String DATABASE_NAME = "Attendance.db";
 	private static final Object LOCK = new Object();
-	public static volatile AppDatabase instance;
+	public static volatile AttendanceDatabase databaseInstance;
 	
-	public static AppDatabase getInstance(Context context) {
-		if (instance == null) {
+	public static AttendanceDatabase getInstance(Context context) {
+		if (databaseInstance == null) {
 			synchronized (LOCK) {
-				if (instance == null) {
-					instance = Room.databaseBuilder(
+				if (databaseInstance == null) {
+					databaseInstance = Room.databaseBuilder(
 							context.getApplicationContext(),
-							AppDatabase.class,
+							AttendanceDatabase.class,
 							DATABASE_NAME
 					).build();
 				}
 			}
 		}
-		return instance;
+		return databaseInstance;
 	}
 	
 	public abstract AttendanceDao attendanceDao();

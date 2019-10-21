@@ -12,7 +12,7 @@ public class Attendance {
 	@PrimaryKey(autoGenerate = true)
 	private int id;
 	@ColumnInfo(name = "type")
-	private int type;
+	private Type type;
 	@ColumnInfo(name = "date")
 	private Date date;
 	@ColumnInfo(name = "latitude")
@@ -20,8 +20,7 @@ public class Attendance {
 	@ColumnInfo(name = "longitude")
 	private float longitude;
 	
-	public Attendance(int id, int type, Date date, float latitude, float longitude) {
-		this.id = id;
+	public Attendance(Type type, Date date, float latitude, float longitude) {
 		this.type = type;
 		this.date = date;
 		this.latitude = latitude;
@@ -36,11 +35,11 @@ public class Attendance {
 		this.id = id;
 	}
 	
-	public int getType() {
+	public Type getType() {
 		return this.type;
 	}
 	
-	public void setType(int type) {
+	public void setType(Type type) {
 		this.type = type;
 	}
 	
@@ -67,4 +66,7 @@ public class Attendance {
 	public void setLongitude(float longitude) {
 		this.longitude = longitude;
 	}
+	
+	public enum Type {CHECK_OUT, CHECK_IN}
 }
+
