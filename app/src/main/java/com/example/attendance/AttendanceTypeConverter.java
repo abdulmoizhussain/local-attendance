@@ -4,12 +4,12 @@ import androidx.room.TypeConverter;
 
 public class AttendanceTypeConverter {
 	@TypeConverter
-	public static String toTypeString(Attendance.Type type) {
-		return type == null ? null : type.name();
+	public static String toTypeString(AttendanceEntity.AttendanceType attendanceType) {
+		return attendanceType == null ? null : attendanceType.name();
 	}
 	
 	@TypeConverter
-	public static Attendance.Type fromTypeString(String type) {
-		return type == null ? null : Attendance.Type.valueOf(type);
+	public static AttendanceEntity.AttendanceType fromTypeString(String type) {
+		return type == null ? null : AttendanceEntity.AttendanceType.valueOf(type);
 	}
 }

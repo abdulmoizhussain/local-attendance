@@ -7,10 +7,10 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-@Database(entities = {Attendance.class}, version = 1, exportSchema = false)
+@Database(entities = {AttendanceEntity.class}, version = 1, exportSchema = false)
 @TypeConverters({DateConverter.class, AttendanceTypeConverter.class})
 public abstract class AttendanceDatabase extends RoomDatabase {
-	public static final String DATABASE_NAME = "Attendance.db";
+	public static final String DATABASE_NAME = "attendance.db";
 	private static final Object LOCK = new Object();
 	public static volatile AttendanceDatabase databaseInstance;
 	
@@ -29,5 +29,6 @@ public abstract class AttendanceDatabase extends RoomDatabase {
 		return databaseInstance;
 	}
 	
-	public abstract AttendanceDao attendanceDao();
+	// DAO: Data Access Object
+	public abstract IAttendanceDao dao();
 }

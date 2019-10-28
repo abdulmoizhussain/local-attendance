@@ -6,13 +6,13 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "Attendance")
-public class Attendance {
+@Entity(tableName = "AttendanceEntity")
+public class AttendanceEntity {
 	
 	@PrimaryKey(autoGenerate = true)
 	private int id;
-	@ColumnInfo(name = "type")
-	private Type type;
+	@ColumnInfo(name = "attendanceType")
+	private AttendanceType attendanceType;
 	@ColumnInfo(name = "date")
 	private Date date;
 	@ColumnInfo(name = "latitude")
@@ -20,8 +20,8 @@ public class Attendance {
 	@ColumnInfo(name = "longitude")
 	private float longitude;
 	
-	public Attendance(Type type, Date date, float latitude, float longitude) {
-		this.type = type;
+	public AttendanceEntity(AttendanceType attendanceType, Date date, float latitude, float longitude) {
+		this.attendanceType = attendanceType;
 		this.date = date;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -35,12 +35,12 @@ public class Attendance {
 		this.id = id;
 	}
 	
-	public Type getType() {
-		return this.type;
+	public AttendanceType getAttendanceType() {
+		return this.attendanceType;
 	}
 	
-	public void setType(Type type) {
-		this.type = type;
+	public void setAttendanceType(AttendanceType attendanceType) {
+		this.attendanceType = attendanceType;
 	}
 	
 	public Date getDate() {
@@ -67,6 +67,5 @@ public class Attendance {
 		this.longitude = longitude;
 	}
 	
-	public enum Type {CHECK_OUT, CHECK_IN}
+	public enum AttendanceType {CHECK_OUT, CHECK_IN}
 }
-
