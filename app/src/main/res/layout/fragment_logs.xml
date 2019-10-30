@@ -16,4 +16,14 @@
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"
 		app:layout_constraintTop_toTopOf="parent" />
+
+	<android.support.v7.widget.RecyclerView
+		android:id="@+id/recycler_view_logs"
+		android:layout_width="411dp"
+		android:layout_height="262dp"
+		android:scrollbars="vertical"
+		app:layout_constraintBottom_toBottomOf="parent"
+		app:layout_constraintStart_toStartOf="parent"
+		app:layout_constraintTop_toBottomOf="@+id/text_logs" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

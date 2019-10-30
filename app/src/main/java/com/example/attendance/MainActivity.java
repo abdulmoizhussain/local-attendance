@@ -19,9 +19,6 @@ import androidx.navigation.ui.NavigationUI;
 
 public class MainActivity extends AppCompatActivity {
 	
-	private List<AttendanceEntity> mAttendanceEntityList;
-	private AttendanceViewModel attendanceViewModel;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -59,23 +56,20 @@ public class MainActivity extends AppCompatActivity {
 	}
 	
 	private void initViewModel() {
-		mAttendanceEntityList = new ArrayList<>();
-		Observer<List<AttendanceEntity>> attendancesObserver = attendances -> {
-			mAttendanceEntityList.clear();
-			if (attendances != null) {
-				mAttendanceEntityList.addAll(attendances);
-			}
+
+//		attendanceViewModel = ViewModelProviders.of(this).get(AttendanceViewModel.class);
+//		// manages on its own that activity is visible or not, if not it wont do anything.
+//		attendanceViewModel.mAttendances.observe(this, attendanceEntities -> {
+//			mAttendanceEntityList.clear();
+//			if (attendanceEntities != null) {
+//				mAttendanceEntityList.addAll(attendanceEntities);
+//			}
 
 //				if (mAttendanceAdapter == null) {
 //					mAttendanceAdapter = new AttendanceAdapter(MainActivity.this, mAttendanceEntityList);
 //					mRecyclerView.setAdapter(mAttendanceAdapter);
 //				}
 //				mAttendanceAdapter.notifyDataSetChange();
-		};
-		
-		
-		attendanceViewModel = ViewModelProviders.of(this).get(AttendanceViewModel.class);
-		// manages on its own that activity is visible or not, if not it wont do anything.
-		attendanceViewModel.mAttendances.observe(this, attendancesObserver);
+//		});
 	}
 }

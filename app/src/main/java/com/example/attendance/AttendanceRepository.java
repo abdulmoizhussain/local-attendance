@@ -27,20 +27,19 @@ public class AttendanceRepository {
 		return ourInstance;
 	}
 	
-	public void addSampleData() {
+	void addSampleData() {
 		final AttendanceEntity attendanceEntity = new AttendanceEntity(
 				AttendanceEntity.AttendanceType.CHECK_IN,
 				new Date(),
 				123,
 				123);
 		//mAttendances = SampleDataProvider.getSampleData
-		Executors.newSingleThreadExecutor()
-				.invokeAny(()-> {
-					long a = Thread.currentThread().getId();
-				});
+//		Executors.newSingleThreadExecutor()
+//				.invokeAny(()-> {
+//					long a = Thread.currentThread().getId();
+//				});
 		
 		mExecutor.execute(() -> {
-			long a = Thread.currentThread().getId();
 			mDatabase.dao().insertOne(attendanceEntity);
 		});
 	}
