@@ -2,12 +2,12 @@ package com.example.attendance;
 
 import android.content.Context;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
-import androidx.lifecycle.LiveData;
 
 public class AttendanceRepository {
 	private static AttendanceRepository ourInstance;
@@ -39,9 +39,7 @@ public class AttendanceRepository {
 //					long a = Thread.currentThread().getId();
 //				});
 		
-		mExecutor.execute(() -> {
-			mDatabase.dao().insertOne(attendanceEntity);
-		});
+		mExecutor.execute(() -> mDatabase.dao().insertOne(attendanceEntity));
 	}
 	
 	private LiveData<List<AttendanceEntity>> getAllAttendances() {

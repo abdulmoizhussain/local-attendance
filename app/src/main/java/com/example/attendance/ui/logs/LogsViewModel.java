@@ -2,19 +2,19 @@ package com.example.attendance.ui.logs;
 
 import android.app.Application;
 
-import com.example.attendance.AttendanceEntity;
-import com.example.attendance.AttendanceRepository;
-
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.attendance.AttendanceEntity;
+import com.example.attendance.AttendanceRepository;
+
+import java.util.List;
+
 public class LogsViewModel extends AndroidViewModel {
 	
-	LiveData<List<AttendanceEntity>> attendanceEntities;
+	public LiveData<List<AttendanceEntity>> attendanceEntities;
 	private MutableLiveData<String> mText;
 	private AttendanceRepository attendanceRepository;
 	
