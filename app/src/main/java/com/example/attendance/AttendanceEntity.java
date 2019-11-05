@@ -1,10 +1,10 @@
 package com.example.attendance;
 
-import java.util.Date;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import java.util.Date;
 
 @Entity(tableName = "AttendanceEntity")
 public class AttendanceEntity {
@@ -19,7 +19,14 @@ public class AttendanceEntity {
 	private float latitude;
 	@ColumnInfo(name = "longitude")
 	private float longitude;
-	
+
+	// DateTime date
+	// String check-in location
+	// String check-in time
+	// String check-out location
+	// String check-out time
+	// array of break-times.
+
 	public AttendanceEntity(AttendanceType attendanceType, Date date, float latitude, float longitude) {
 		this.attendanceType = attendanceType;
 		this.date = date;
