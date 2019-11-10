@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
 @Database(entities = {AttendanceEntity.class}, version = 1, exportSchema = false)
-@TypeConverters({DateConverter.class, AttendanceTypeConverter.class})
+@TypeConverters({DateConverter.class})
 public abstract class AttendanceDatabase extends RoomDatabase {
 	public static final String DATABASE_NAME = "attendance.db";
 	private static final Object LOCK = new Object();

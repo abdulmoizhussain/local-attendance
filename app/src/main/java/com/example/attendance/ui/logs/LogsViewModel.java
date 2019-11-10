@@ -23,7 +23,7 @@ public class LogsViewModel extends AndroidViewModel {
 		mText = new MutableLiveData<>();
 		
 		attendanceRepository = AttendanceRepository.getInstance(application);
-		attendanceEntities = attendanceRepository.mAttendances;
+		attendanceEntities = attendanceRepository.allAttendances;
 		mText.setValue("This is logs fragment");
 	}
 	

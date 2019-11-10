@@ -8,71 +8,110 @@ import java.util.Date;
 
 @Entity(tableName = "AttendanceEntity")
 public class AttendanceEntity {
-	
-	@PrimaryKey(autoGenerate = true)
-	private int id;
-	@ColumnInfo(name = "attendanceType")
-	private AttendanceType attendanceType;
-	@ColumnInfo(name = "date")
-	private Date date;
-	@ColumnInfo(name = "latitude")
-	private float latitude;
-	@ColumnInfo(name = "longitude")
-	private float longitude;
 
-	// DateTime date
-	// String check-in location
-	// String check-in time
-	// String check-out location
-	// String check-out time
-	// array of break-times.
+  @PrimaryKey(autoGenerate = true)
+  private int id;
 
-	public AttendanceEntity(AttendanceType attendanceType, Date date, float latitude, float longitude) {
-		this.attendanceType = attendanceType;
-		this.date = date;
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
-	
-	public int getId() {
-		return this.id;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public AttendanceType getAttendanceType() {
-		return this.attendanceType;
-	}
-	
-	public void setAttendanceType(AttendanceType attendanceType) {
-		this.attendanceType = attendanceType;
-	}
-	
-	public Date getDate() {
-		return this.date;
-	}
-	
-	public void setDate(Date date) {
-		this.date = date;
-	}
-	
-	public float getLatitude() {
-		return this.latitude;
-	}
-	
-	public void setLatitude(float latitude) {
-		this.latitude = latitude;
-	}
-	
-	public float getLongitude() {
-		return this.longitude;
-	}
-	
-	public void setLongitude(float longitude) {
-		this.longitude = longitude;
-	}
-	
-	public enum AttendanceType {CHECK_OUT, CHECK_IN}
+  @ColumnInfo(name = "Date")
+  private Date date;
+
+  @ColumnInfo(name = "CheckInTime")
+  private Date checkInTime;
+
+  @ColumnInfo(name = "CheckInLatitude")
+  private float checkInLatitude;
+
+  @ColumnInfo(name = "CheckInLongitude")
+  private float checkInLongitude;
+
+  @ColumnInfo(name = "CheckOutTime")
+  private Date checkOutTime;
+
+  @ColumnInfo(name = "CheckOutLatitude")
+  private float checkOutLatitude;
+
+  @ColumnInfo(name = "CheckOutLongitude")
+  private float checkOutLongitude;
+
+  // array of break-times.
+
+  public AttendanceEntity(Date date,
+                          Date checkInTime,
+                          float checkInLatitude,
+                          float checkInLongitude,
+                          Date checkOutTime,
+                          float checkOutLatitude,
+                          float checkOutLongitude) {
+    this.date = date;
+    this.checkInTime = checkInTime;
+    this.checkOutTime = checkOutTime;
+    this.checkInLatitude = checkInLatitude;
+    this.checkInLongitude = checkInLongitude;
+    this.checkOutLatitude = checkOutLatitude;
+    this.checkOutLongitude = checkOutLongitude;
+  }
+
+  public int getId() {
+    return this.id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
+  }
+
+  public Date getCheckInTime() {
+    return checkInTime;
+  }
+
+  public void setCheckInTime(Date checkInTime) {
+    this.checkInTime = checkInTime;
+  }
+
+  public float getCheckInLatitude() {
+    return checkInLatitude;
+  }
+
+  public void setCheckInLatitude(float checkInLatitude) {
+    this.checkInLatitude = checkInLatitude;
+  }
+
+  public float getCheckInLongitude() {
+    return checkInLongitude;
+  }
+
+  public void setCheckInLongitude(float checkInLongitude) {
+    this.checkInLongitude = checkInLongitude;
+  }
+
+  public Date getCheckOutTime() {
+    return checkOutTime;
+  }
+
+  public void setCheckOutTime(Date checkOutTime) {
+    this.checkOutTime = checkOutTime;
+  }
+
+  public float getCheckOutLatitude() {
+    return checkOutLatitude;
+  }
+
+  public void setCheckOutLatitude(float checkOutLatitude) {
+    this.checkOutLatitude = checkOutLatitude;
+  }
+
+  public float getCheckOutLongitude() {
+    return checkOutLongitude;
+  }
+
+  public void setCheckOutLongitude(float checkOutLongitude) {
+    this.checkOutLongitude = checkOutLongitude;
+  }
+
+  public Date getDate() {
+    return date;
+  }
+
+  public void setDate(Date date) {
+    this.date = date;
+  }
 }

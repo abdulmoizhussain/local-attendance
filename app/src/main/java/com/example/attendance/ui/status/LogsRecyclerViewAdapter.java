@@ -41,15 +41,12 @@ public class LogsRecyclerViewAdapter extends RecyclerView.Adapter<LogsRecyclerVi
     AttendanceEntity entity = attendanceEntities.get(i);
 
     logsRecyclerViewHolder.attId.setText(Common.FormatString("%d", entity.getId()));
-    logsRecyclerViewHolder.attType.setText(entity.getAttendanceType().name());
-
-    String location = Common.FormatString(
-        "%f:%f",
-        entity.getLatitude(),
-        entity.getLongitude());
-    logsRecyclerViewHolder.attLocation.setText(location);
 
     logsRecyclerViewHolder.attDate.setText(entity.getDate().toString());
+
+    logsRecyclerViewHolder.checkInTime.setText(entity.getCheckInTime().toString());
+
+    logsRecyclerViewHolder.checkOutTime.setText(entity.getCheckInTime().toString());
   }
 
   @Override
@@ -61,9 +58,9 @@ public class LogsRecyclerViewAdapter extends RecyclerView.Adapter<LogsRecyclerVi
     //public class LogsRecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
     TextView attId;
-    TextView attType;
     TextView attDate;
-    TextView attLocation;
+    TextView checkInTime;
+    TextView checkOutTime;
 
     //	ViewHolderClicks mListener;
 
@@ -73,9 +70,9 @@ public class LogsRecyclerViewAdapter extends RecyclerView.Adapter<LogsRecyclerVi
       //		this.mListener = listener;
       //		itemView.setOnClickListener(this);
       attId = itemView.findViewById(R.id.attendance_id);
-      attType = itemView.findViewById(R.id.attendance_type);
       attDate = itemView.findViewById(R.id.attendance_date);
-      attLocation = itemView.findViewById(R.id.attendance_location);
+      checkInTime = itemView.findViewById(R.id.check_in_time);
+      checkOutTime = itemView.findViewById(R.id.check_out_time);
     }
 
     //	@Override
