@@ -27,7 +27,18 @@ public class MainActivity extends AppCompatActivity {
     checkAndAskLocationPermission();
 
     // Do not directly do any initializations or call of methods here, before taking permissions.
-    // Do everything inside this function: continueToCallOnCreateMethods(); after requesting for permission.
+    // Do everything inside the function: continueToCallOnCreateMethods();
+    // after requesting for permissions.
+  }
+
+  private void checkAndAskLocationPermission() {
+    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED
+        || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+      // if location permission is denied !
+      ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+      return;
+    }
+    continueToCallOnCreateMethods();
   }
 
   private void continueToCallOnCreateMethods() {
@@ -36,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void settleBottomNavigationBar() {
-    BottomNavigationView navView = findViewById(R.id.nav_view);
+    BottomNavigationView navView = findViewById(R.id.bottom_nav_view);
     // Passing each menu ID as a set of Ids because each
     // menu should be considered as top level destinations.
     AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -45,25 +56,13 @@ public class MainActivity extends AppCompatActivity {
     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
     NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
     NavigationUI.setupWithNavController(navView, navController);
+
     resetSizeOfNavigationHost(navView);
-  }
-
-  /*
-   So that bottom of parent-fragment can end at the top of bottom-tab-navigation-bar.
-  */
-  private void resetSizeOfNavigationHost(BottomNavigationView bottomNavigationView) {
-    DisplayMetrics navMetrics = bottomNavigationView.getResources().getDisplayMetrics();
-
-    View parentFragment = findViewById(R.id.nav_host_fragment);
-    DisplayMetrics fragmentMetrics = parentFragment.getResources().getDisplayMetrics();
-
-    parentFragment.getLayoutParams().width = fragmentMetrics.widthPixels - navMetrics.widthPixels;
-    parentFragment.getLayoutParams().height = fragmentMetrics.heightPixels - navMetrics.heightPixels;
   }
 
   private void initViewModel() {
 
-//		attendanceViewModel = ViewModelProviders.of(this).get(AttendanceViewModel.class);
+//		attendanceViewModel = ViewModelProviders.of(this).get(StatusFragmentViewModel.class);
 //		// manages on its own that activity is visible or not, if not it wont do anything.
 //		attendanceViewModel.allAttendances.observe(this, attendanceEntities -> {
 //			mAttendanceEntityList.clear();
@@ -79,14 +78,17 @@ public class MainActivity extends AppCompatActivity {
 //		});
   }
 
-  private void checkAndAskLocationPermission() {
-    if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED
-        || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-      // if location permission is denied !
-      ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-      return;
-    }
-    continueToCallOnCreateMethods();
+  /*
+   So that bottom of parent-fragment can end at the top of bottom-tab-navigation-bar.
+  */
+  private void resetSizeOfNavigationHost(BottomNavigationView bottomNavigationView) {
+    DisplayMetrics navMetrics = bottomNavigationView.getResources().getDisplayMetrics();
+
+    View parentFragment = findViewById(R.id.nav_host_fragment);
+    DisplayMetrics fragmentMetrics = parentFragment.getResources().getDisplayMetrics();
+
+    parentFragment.getLayoutParams().width = fragmentMetrics.widthPixels - navMetrics.widthPixels;
+    parentFragment.getLayoutParams().height = fragmentMetrics.heightPixels - navMetrics.heightPixels;
   }
 
   @Override

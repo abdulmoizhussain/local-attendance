@@ -1,6 +1,7 @@
 package com.example.attendance.ui.status;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,14 +20,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.example.attendance.AttendanceEntity;
-import com.example.attendance.AttendanceViewModel;
+import com.example.attendance.sqlite.context.AttendanceEntity;
 import com.example.attendance.Common;
 import com.example.attendance.R;
-import com.example.attendance.ui.logs.LogsViewModel;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -37,36 +34,31 @@ import androidx.core.content.ContextCompat;
 
 public class StatusFragment extends Fragment {
 
-  private StatusViewModel statusViewModel;
-  private LogsViewModel logsViewModel;
-  private AttendanceViewModel attendanceViewModel;
-  private List<AttendanceEntity> attendanceEntityList = new ArrayList<>();
+  private AlertDialog alertDialogLoading;
+  private StatusFragmentViewModel statusFragmentViewModel;
   private Button checkInButton, checkOutButton;
+  private TextView textViewCheckInStatus;
 
   public View onCreateView(
       @NonNull LayoutInflater inflater,
-      ViewGroup container, Bundle savedInstanceState) {
+      ViewGroup container,
+      Bundle savedInstanceState) {
 
-    attendanceViewModel = ViewModelProviders.of(this).get(AttendanceViewModel.class);
+    alertDialogLoading = new AlertDialog.Builder(getContext()).create();
+    alertDialogLoading.setCancelable(false);
+    alertDialogLoading.setMessage(getString(R.string.title_loading));
 
-    logsViewModel = ViewModelProviders.of(this).get(LogsViewModel.class);
-    logsViewModel.attendanceEntities.observe(this, (List<AttendanceEntity> attendanceEntities) -> {
-      attendanceEntityList.clear();
-      if (attendanceEntities != null)
-        attendanceEntityList.addAll(attendanceEntities);
-    });
-
-    statusViewModel = ViewModelProviders.of(this).get(StatusViewModel.class);
+    statusFragmentViewModel = ViewModelProviders.of(this).get(StatusFragmentViewModel.class);
 
     View root = inflater.inflate(R.layout.fragment_status, container, false);
-    final TextView textView = root.findViewById(R.id.text_status);
-    statusViewModel.getText().observe(this, textView::setText);
 
-    checkInButton = root.findViewById(R.id.button_check_in);
+    checkInButton = root.findViewById(R.id.buttonCheckIn);
     checkInButton.setOnClickListener(checkInButtonOnClickListener);
 
-    checkOutButton = root.findViewById(R.id.button_check_out);
+    checkOutButton = root.findViewById(R.id.buttonCheckOut);
     checkOutButton.setOnClickListener(checkOutButtonOnClickListener);
+
+    textViewCheckInStatus = root.findViewById(R.id.textViewCheckInStatus);
 
     resetCheckInAndCheckOutButtonStates();
     return root;
@@ -78,27 +70,49 @@ public class StatusFragment extends Fragment {
       return;
     }
 
-    Future<AttendanceEntity> entityFutureWhereCheckOutLocationIsNull =
-        attendanceViewModel.getOneWhereCheckOutLocationIsNull();
-
     try {
-      AttendanceEntity attendanceEntity =
-          entityFutureWhereCheckOutLocationIsNull.get(10, TimeUnit.SECONDS);
-
-      Common.ConsoleLog(attendanceEntity.getCheckInTime().toString());
-      Common.ConsoleLog(attendanceEntity.getCheckOutTime().toString());
-
+      alertDialogLoading.show();
+      Future result = statusFragmentViewModel.checkInUserNow(currentLocation);
+      result.get(10, TimeUnit.SECONDS);
     } catch (ExecutionException | InterruptedException | TimeoutException e) {
       e.printStackTrace();
+      Toast.makeText(getContext(),
+          "Cannot check-in at the moment plz try again.", Toast.LENGTH_SHORT).show();
+    } finally {
+      alertDialogLoading.dismiss();
     }
+    resetCheckInAndCheckOutButtonStates();
   };
 
   private View.OnClickListener checkOutButtonOnClickListener = (View view) -> {
+    Location currentLocation = getCurrentLocation();
+    if (currentLocation == null) {
+      return;
+    }
 
+    try {
+      alertDialogLoading.show();
+      AttendanceEntity attendanceEntityWithNullCheckOut =
+          statusFragmentViewModel.getOneWhereCheckOutIsNull()
+              .get(10, TimeUnit.SECONDS);
+
+      statusFragmentViewModel
+          .checkOutUserNow(currentLocation, attendanceEntityWithNullCheckOut)
+          .get(10, TimeUnit.SECONDS);
+
+      resetCheckInAndCheckOutButtonStates();
+    } catch (ExecutionException | InterruptedException | TimeoutException e) {
+      e.printStackTrace();
+      Toast.makeText(getContext(),
+          "Cannot at the moment plz try again.", Toast.LENGTH_SHORT).show();
+    } finally {
+      alertDialogLoading.dismiss();
+    }
   };
 
   private Location getCurrentLocation() {
-    LocationManager locationManager = (LocationManager) Objects.requireNonNull(getActivity()).getSystemService(Context.LOCATION_SERVICE);
+    LocationManager locationManager = (LocationManager)Objects.requireNonNull(getActivity())
+            .getSystemService(Context.LOCATION_SERVICE);
 
     if (locationManager == null) {
       return null;
@@ -115,6 +129,8 @@ public class StatusFragment extends Fragment {
     }
 
     boolean isProviderEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+//    GPS_PROVIDER or NETWORK_PROVIDER. can use anyone.
+
     if (!isProviderEnabled) {
       // When provider is disabled.
       Common.CenteredToast(getActivity(), "Please turn on Location Service.", Toast.LENGTH_LONG);
@@ -122,34 +138,57 @@ public class StatusFragment extends Fragment {
       return null;
     }
 
-    Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-    if (location == null) {
+    Location locationFromNetwork = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+    Location locationFromGps = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+    if (locationFromNetwork != null) {
+      return locationFromNetwork;
+    } else if (locationFromGps != null) {
+      return locationFromGps;
+    } else {
       Common.CenteredToast(getActivity(), "Unable to get location !", Toast.LENGTH_LONG);
       return null;
     }
-
-    return location;
+//    https://developerlife.com/2010/10/20/gps/
+//    Criteria c = new Criteria();
+//    c.setAccuracy(Criteria.ACCURACY_FINE);
+//    c.setAltitudeRequired(false);
+//    c.setBearingRequired(false);
+//    c.setSpeedRequired(false);
+//    c.setCostAllowed(true);
+//    c.setPowerRequirement(Criteria.POWER_HIGH);
   }
 
   private void resetCheckInAndCheckOutButtonStates() {
-    Future<AttendanceEntity> entityFutureWhereCheckOutLocationIsNull =
-        attendanceViewModel.getOneWhereCheckOutLocationIsNull();
-
+    alertDialogLoading.show();
+    AttendanceEntity entity = null;
     try {
-      AttendanceEntity entity = entityFutureWhereCheckOutLocationIsNull.get(10, TimeUnit.SECONDS);
-
-      if (entity == null) {
-        // No entity found with null check-out, user will do check-in only.
-        checkInButton.setEnabled(true);
-        checkOutButton.setEnabled(false);
-      } else {
-        // Found entity with null check-out, user will do check-out only.
-        checkInButton.setEnabled(false);
-        checkOutButton.setEnabled(true);
-      }
-
+      entity = statusFragmentViewModel
+          .getOneWhereCheckOutIsNull()
+          .get(10, TimeUnit.SECONDS);
     } catch (ExecutionException | InterruptedException | TimeoutException e) {
       e.printStackTrace();
+      Toast.makeText(getContext(),
+          "Error loading status, plz try again.", Toast.LENGTH_SHORT).show();
+    } finally {
+      alertDialogLoading.dismiss();
+    }
+
+    if (entity == null) {
+      // No entity found with null check-out, user will do check-in only.
+      checkInButton.setEnabled(true);
+      checkOutButton.setEnabled(false);
+      textViewCheckInStatus.setText(null);
+
+    } else {
+      // Found entity with null check-out, user will do check-out only.
+      checkInButton.setEnabled(false);
+      checkOutButton.setEnabled(true);
+
+      Common.Date checkInTime = new Common.Date(entity.getCheckInTime());
+
+      textViewCheckInStatus.setText(null);
+      textViewCheckInStatus.append("Total hours since last check-in: ");
+      textViewCheckInStatus.append(Float.toString(checkInTime.totalHours()));
     }
   }
 }

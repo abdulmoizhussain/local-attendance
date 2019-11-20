@@ -2,5 +2,10 @@
     <string name="app_name">Attendance</string>
     <string name="title_status">Status</string>
     <string name="title_logs">Logs</string>
+    <string name="title_loading">Loading…</string>
+    <string name="heading_date">Date</string>
+    <string name="heading_clock_in_time">ClockIn Time</string>
+    <string name="heading_clock_out_time">ClockOut Time</string>
+    <string name="heading_total_hours">Total Hours</string>
     <string name="blank_text" />
 </resources>

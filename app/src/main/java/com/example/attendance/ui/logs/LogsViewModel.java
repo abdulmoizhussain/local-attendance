@@ -7,28 +7,30 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.attendance.AttendanceEntity;
-import com.example.attendance.AttendanceRepository;
+import com.example.attendance.sqlite.context.AttendanceEntity;
+import com.example.attendance.repository.sqlite.AttendanceRepository;
 
 import java.util.List;
 
 public class LogsViewModel extends AndroidViewModel {
-	
+
 	public LiveData<List<AttendanceEntity>> attendanceEntities;
-	private MutableLiveData<String> mText;
+
 	private AttendanceRepository attendanceRepository;
-	
+
 	public LogsViewModel(@NonNull Application application) {
 		super(application);
-		mText = new MutableLiveData<>();
-		
 		attendanceRepository = AttendanceRepository.getInstance(application);
 		attendanceEntities = attendanceRepository.allAttendances;
-		mText.setValue("This is logs fragment");
 	}
-	
-	
-	public LiveData<String> getText() {
-		return mText;
-	}
+
+	//	private MutableLiveData<String> mText;
+//	mText = new MutableLiveData<>();
+//	mText.setValue("This is logs fragment");
+//	public LiveData<String> getText() {
+//		return mText;
+//	}
+//	usage
+//	final TextView textView = root.findViewById(R.id.textViewHeadDate);
+//		logsViewModel.getText().observe(this, textView::setText);
 }

@@ -1,8 +1,12 @@
-package com.example.attendance;
+package com.example.attendance.repository.sqlite;
 
 import android.content.Context;
+import android.location.Location;
 
 import androidx.lifecycle.LiveData;
+
+import com.example.attendance.sqlite.context.AttendanceDatabase;
+import com.example.attendance.sqlite.context.AttendanceEntity;
 
 import java.util.Date;
 import java.util.List;
@@ -14,7 +18,6 @@ import java.util.concurrent.Future;
 public class AttendanceRepository {
   private static AttendanceRepository ourInstance;
   private AttendanceDatabase mDatabase;
-  private Executor mExecutor = Executors.newSingleThreadExecutor();
   private ExecutorService executorService = Executors.newSingleThreadExecutor();
   public LiveData<List<AttendanceEntity>> allAttendances;
 
@@ -31,31 +34,29 @@ public class AttendanceRepository {
     return ourInstance;
   }
 
-  void addSampleData() {
-    Date date = new Date();
-    final AttendanceEntity attendanceEntity = new AttendanceEntity(
-        date,
-        date,
-        123,
-        123,
-        null,
-        0,
-        0);
-
-//		Executors.newSingleThreadExecutor()
-//				.invokeAny(()-> {
-//					long a = Thread.currentThread().getId();
-//				});
-
-    mExecutor.execute(() -> mDatabase.dao().insertOne(attendanceEntity));
-  }
-
   private LiveData<List<AttendanceEntity>> getAllAttendances() {
     return mDatabase.dao().getAll();
   }
 
+  public Future insertEntityWithCheckInStatus(Location currentLocation) {
+    Date date = new Date();
+    AttendanceEntity attendanceEntity = new AttendanceEntity(
+        date,
+        date,
+        currentLocation.getLatitude(),
+        currentLocation.getLongitude(),
+        new Date(0),
+        0,
+        0
+    );
+    return executorService.submit(() -> mDatabase.dao().insertOne(attendanceEntity));
+  }
 
-  Future<AttendanceEntity> getOneWhereCheckOutLocationIsNull() {
-    return executorService.submit(mDatabase.dao()::getOneWhereCheckOutLocationIsNull);
+  public Future updateOne(AttendanceEntity attendanceEntity) {
+    return executorService.submit(() -> mDatabase.dao().updateOne(attendanceEntity));
+  }
+
+  public Future<AttendanceEntity> getOneWhereCheckOutIsNull() {
+    return executorService.submit(mDatabase.dao()::getOneWhereCheckOutIsNull);
   }
 }

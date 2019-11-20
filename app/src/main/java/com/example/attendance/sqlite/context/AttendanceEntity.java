@@ -1,4 +1,4 @@
-package com.example.attendance;
+package com.example.attendance.sqlite.context;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -19,29 +19,29 @@ public class AttendanceEntity {
   private Date checkInTime;
 
   @ColumnInfo(name = "CheckInLatitude")
-  private float checkInLatitude;
+  private double checkInLatitude;
 
   @ColumnInfo(name = "CheckInLongitude")
-  private float checkInLongitude;
+  private double checkInLongitude;
 
   @ColumnInfo(name = "CheckOutTime")
   private Date checkOutTime;
 
   @ColumnInfo(name = "CheckOutLatitude")
-  private float checkOutLatitude;
+  private double checkOutLatitude;
 
   @ColumnInfo(name = "CheckOutLongitude")
-  private float checkOutLongitude;
+  private double checkOutLongitude;
 
   // array of break-times.
 
   public AttendanceEntity(Date date,
                           Date checkInTime,
-                          float checkInLatitude,
-                          float checkInLongitude,
+                          double checkInLatitude,
+                          double checkInLongitude,
                           Date checkOutTime,
-                          float checkOutLatitude,
-                          float checkOutLongitude) {
+                          double checkOutLatitude,
+                          double checkOutLongitude) {
     this.date = date;
     this.checkInTime = checkInTime;
     this.checkOutTime = checkOutTime;
@@ -67,19 +67,19 @@ public class AttendanceEntity {
     this.checkInTime = checkInTime;
   }
 
-  public float getCheckInLatitude() {
+  public double getCheckInLatitude() {
     return checkInLatitude;
   }
 
-  public void setCheckInLatitude(float checkInLatitude) {
+  public void setCheckInLatitude(double checkInLatitude) {
     this.checkInLatitude = checkInLatitude;
   }
 
-  public float getCheckInLongitude() {
+  public double getCheckInLongitude() {
     return checkInLongitude;
   }
 
-  public void setCheckInLongitude(float checkInLongitude) {
+  public void setCheckInLongitude(double checkInLongitude) {
     this.checkInLongitude = checkInLongitude;
   }
 
@@ -91,19 +91,19 @@ public class AttendanceEntity {
     this.checkOutTime = checkOutTime;
   }
 
-  public float getCheckOutLatitude() {
+  public double getCheckOutLatitude() {
     return checkOutLatitude;
   }
 
-  public void setCheckOutLatitude(float checkOutLatitude) {
+  public void setCheckOutLatitude(double checkOutLatitude) {
     this.checkOutLatitude = checkOutLatitude;
   }
 
-  public float getCheckOutLongitude() {
+  public double getCheckOutLongitude() {
     return checkOutLongitude;
   }
 
-  public void setCheckOutLongitude(float checkOutLongitude) {
+  public void setCheckOutLongitude(double checkOutLongitude) {
     this.checkOutLongitude = checkOutLongitude;
   }
 

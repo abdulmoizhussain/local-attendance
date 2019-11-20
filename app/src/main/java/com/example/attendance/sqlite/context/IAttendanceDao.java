@@ -1,6 +1,5 @@
-package com.example.attendance;
+package com.example.attendance.sqlite.context;
 
-import java.util.Date;
 import java.util.List;
 
 import androidx.lifecycle.LiveData;
@@ -31,8 +30,8 @@ public interface IAttendanceDao {
   @Query("SELECT * FROM AttendanceEntity WHERE id=:id")
   List<AttendanceEntity> getOneById(int id);
 
-  @Query("SELECT * FROM AttendanceEntity WHERE CheckOutLatitude=0 AND CheckOutLongitude=0")
-  AttendanceEntity getOneWhereCheckOutLocationIsNull();
+  @Query("SELECT * FROM AttendanceEntity WHERE CheckOutTime=0 AND CheckOutLatitude=0 AND CheckOutLongitude=0")
+  AttendanceEntity getOneWhereCheckOutIsNull();
 
   @Query("DELETE FROM AttendanceEntity")
   int deleteAll();
