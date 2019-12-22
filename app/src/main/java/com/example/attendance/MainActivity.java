@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -23,7 +24,10 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
@@ -31,6 +35,8 @@ import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,11 +47,10 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		checkAndAskLocationPermission();
-
 		// Do not directly do any initializations or call of methods here, before taking permissions.
 		// Do everything inside the function: continueToCallOnCreateMethods();
-		// after requesting for permissions.
+		// after approval of permissions.
+		checkAndAskLocationPermission();
 	}
 
 	private void checkAndAskLocationPermission() {
@@ -61,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 	private void continueToCallOnCreateMethods() {
 		settleBottomNavigationBar();
 		initViewModel();
+		testing();
 	}
 
 	private void settleBottomNavigationBar() {
@@ -109,7 +115,10 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+	public void onRequestPermissionsResult(
+			int requestCode,
+			@NonNull String[] permissions,
+			@NonNull int[] grantResults) {
 		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 		for (int i = 0; i < permissions.length; i++) {
 			if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
@@ -122,10 +131,10 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
+	protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
 
-		final LocationSettingsStates states = LocationSettingsStates.fromIntent(data);
+		final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
 
 		switch (requestCode) {
 			case REQUEST_CHECK_LOCATION_SETTINGS:
@@ -228,6 +237,22 @@ public class MainActivity extends AppCompatActivity {
 				// All location settings are satisfied. The client can initialize location
 				// requests here.
 				//   ...
+				FusedLocationProviderClient providerClient = getFusedLocationProviderClient(this);
+
+				LocationCallback locationCallback = new LocationCallback() {
+					@Override
+					public void onLocationResult(LocationResult locationResult) {
+						super.onLocationResult(locationResult);
+
+						Location location = locationResult.getLastLocation();
+					}
+				};
+
+				providerClient.requestLocationUpdates(
+						locationRequest,
+						locationCallback,
+						null);
+
 			} catch (ApiException exception) {
 				switch (exception.getStatusCode()) {
 					case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
